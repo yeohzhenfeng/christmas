@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>🎄 Christmas Greeting</title>
+<title>🎄 圣诞祝福</title>
 
 <style>
   :root{
@@ -25,7 +25,7 @@
       linear-gradient(135deg,var(--bg-a),var(--bg-b),var(--bg-c));
   }
 
-  /* soft glow (nice for screenshots) */
+  /* subtle glow drift (nice for screenshots) */
   .glow{
     position:fixed;
     width:560px;height:560px;
@@ -70,7 +70,7 @@
     z-index:2;
   }
 
-  /* card */
+  /* card (screenshot-friendly) */
   .card{
     width:min(360px,92vw);
     text-align:center;
@@ -114,6 +114,7 @@
     margin:0 0 10px;
     font-size:26px;
     color:#7a1f4b;
+    letter-spacing:.3px;
   }
 
   .text{
@@ -153,7 +154,7 @@
     opacity:.92;
   }
 
-  /* ending */
+  /* ending state */
   .card.ending{
     opacity:0;
     transform: translateY(10px) scale(.985);
@@ -187,6 +188,8 @@
     background: rgba(255,255,255,.92);
     text-align:center;
     box-shadow: 0 24px 80px rgba(0,0,0,.45);
+    position:relative;
+    overflow:hidden;
   }
   .overlay-title{
     font-size:20px;
@@ -206,67 +209,88 @@
     font-size:12px;
     opacity:.75;
   }
+
+  @media (max-width:420px){
+    h1{ font-size:23px; }
+    .text{ font-size:15px; min-height:145px; }
+    .card{ padding: 28px 22px 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .snowflake,.glow{ animation:none !important; }
+    .card{ transition:none !important; }
+    .overlay{ transition:none !important; }
+  }
 </style>
 </head>
 
 <body>
-  <div class="glow"></div>
+  <div class="glow" aria-hidden="true"></div>
 
   <div class="wrap">
     <div class="card" id="card">
-      <div class="badge" id="badge">🎄 Today Only</div>
-      <h1>For Little Fairy</h1>
+      <div class="badge" id="badge">🎄 今天限定</div>
+      <h1>给小仙女</h1>
 
       <div class="text" id="text"></div>
 
-      <button class="btn" id="next">Continue ❄️</button>
+      <button class="btn" id="next">继续看 ❄️</button>
       <br />
-      <button class="btn music" id="musicBtn">🎵 Play Christmas Music</button>
+      <button class="btn music" id="musicBtn">🎵 播放圣诞歌</button>
 
-      <div class="from">— ZF</div>
+      <div class="from">—— ZF</div>
     </div>
   </div>
 
-  <div class="overlay" id="overlay">
+  <div class="overlay" id="overlay" aria-hidden="true">
     <div class="overlay-card">
-      <h2 class="overlay-title">⏰ Ended</h2>
-      <p class="overlay-desc">
-        This today-only message has ended.\n
-        But I hope the warmth you saw here\n
-        stays with you a little longer ❄️
+      <h2 class="overlay-title">⏰ 已结束</h2>
+      <p class="overlay-desc" id="endText">
+        今天限定的祝福已经过期啦～\n
+        但希望你看到过的那份温暖，\n
+        还能留在心里一点点 ❄️
       </p>
-      <div class="small">(You can take a screenshot to keep it)</div>
+      <div class="small">（你可以截屏留作纪念）</div>
     </div>
   </div>
 
   <audio id="bgm" loop>
+    <!-- 免费无版权圣诞音乐 -->
     <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_6a0c7b3c25.mp3?filename=christmas-village-ambient-124008.mp3" type="audio/mpeg">
   </audio>
 
 <script>
-  /* time control */
+  // ===== 1) 今天限定 + 今晚12点后结束（本地时间） =====
   const now = new Date();
   const endTime = new Date(now);
-  endTime.setHours(24,0,0,0);
+  endTime.setHours(24,0,0,0); // tonight 12:00 AM (next day 00:00:00)
 
+  // 如果你只想“圣诞当天才算今天限定”，可以启用下面两行：
+  // const isChristmas = now.getMonth() === 11 && now.getDate() === 25;
+  // const todayLimited = isChristmas;
+
+  // 目前逻辑：只要是在“今晚12点之前”打开，就算今天限定
   const todayLimited = now < endTime;
-  document.getElementById("badge").textContent = todayLimited ? "🎄 Today Only" : "❄️ Archived";
 
-  /* messages */
-  const messagesToday = [
-    "Little Fairy,\nMerry Christmas 🎄",
-    "Since today is Christmas,\nI wanted to wish you something special.",
-    "You don't have to feel extra happy.\nJust don't be too hard on yourself.",
-    "May you see snow when you look up,\nand feel warmth when you look down.",
-    "🎄 Merry Christmas\nThis message belongs\nonly to today ❄️"
-  ];
+  const badge = document.getElementById("badge");
+  badge.textContent = todayLimited ? "🎄 今天限定" : "❄️ 普通日也有效";
 
-  const messagesNormal = [
-    "Little Fairy,\nHello ✨",
-    "If you opened this on another day,\nthat’s okay too.",
-    "I hope you’re feeling calm\nwhen you read this.",
-    "May you be treated gently\nthis winter ❄️"
-  ];
+// ===== 2) 打字机文本（幽默朋友版，不告白、不关心） =====
+const messagesToday = [
+  "嗨，小仙女 👋\n圣诞快乐 🎄",
+  "先说好，\n这里没有什么深层含义 😂",
+  "只是我在测试一个东西，\n刚好今天是圣诞节。",
+  "所以它就顺便长这样了。",
+  "🎄 圣诞快乐\n今天限定内容。\n看看就好，别太认真 ❄️"
+];
+
+const messagesNormal = [
+  "嗨，小仙女 👋",
+  "这原本是圣诞节限定的。",
+  "但你在别的日子点开了。",
+  "那就……\n随便打个招呼吧 😄"
+];
+
 
   const messages = todayLimited ? messagesToday : messagesNormal;
 
@@ -282,42 +306,52 @@
     }
   }
 
-  typeText(messages[0]); step = 1;
-
   nextBtn.onclick = () => {
     if(step < messages.length){
       typeText(messages[step]);
       step++;
+      if(step === messages.length){
+        nextBtn.textContent = "🎄";
+      }
     }
   };
 
-  /* snow */
+  // 默认先显示第一段（更像“打开就有内容”，截图更好看）
+  typeText(messages[0]); step = 1;
+
+  // ===== 3) 雪景（可停止） =====
   const snowChars = ["❄","❅","❆"];
   const snowCount = 34;
   const snowEls = [];
 
-  for(let i=0;i<snowCount;i++){
-    const s = document.createElement("div");
-    s.className = "snowflake";
-    s.textContent = snowChars[Math.floor(Math.random()*snowChars.length)];
-    s.style.left = Math.random()*100 + "vw";
-    s.style.fontSize = (12 + Math.random()*14) + "px";
-    s.style.animationDuration = (6 + Math.random()*8) + "s";
-    s.style.animationDelay = (-Math.random()*8) + "s";
-    document.body.appendChild(s);
-    snowEls.push(s);
+  function createSnow(){
+    for(let i=0;i<snowCount;i++){
+      const s = document.createElement("div");
+      s.className = "snowflake";
+      s.textContent = snowChars[Math.floor(Math.random()*snowChars.length)];
+      s.style.left = Math.random()*100 + "vw";
+      s.style.fontSize = (12 + Math.random()*14) + "px";
+      s.style.animationDuration = (6 + Math.random()*8) + "s";
+      s.style.animationDelay = (-Math.random()*8) + "s";
+      s.style.opacity = (0.55 + Math.random()*0.45).toFixed(2);
+      document.body.appendChild(s);
+      snowEls.push(s);
+    }
   }
 
   function stopSnow(){
-    snowEls.forEach((el, i) => {
+    // 停止动画，并慢慢淡出雪花
+    snowEls.forEach((el, idx) => {
       el.style.animationPlayState = "paused";
       el.style.transition = "opacity 900ms ease";
       el.style.opacity = "0";
-      setTimeout(()=>el.remove(), 1100 + i*6);
+      setTimeout(() => el.remove(), 1100 + idx * 6);
     });
   }
 
-  /* music */
+  createSnow();
+
+  // ===== 4) 音乐开关（不自动播放） =====
   const bgm = document.getElementById("bgm");
   const musicBtn = document.getElementById("musicBtn");
   let playing = false;
@@ -325,30 +359,46 @@
   musicBtn.onclick = () => {
     if(!playing){
       bgm.play();
-      musicBtn.textContent = "⏸ Pause Music";
+      musicBtn.textContent = "⏸️ 暂停音乐";
       playing = true;
     }else{
       bgm.pause();
-      musicBtn.textContent = "🎵 Play Christmas Music";
+      musicBtn.textContent = "🎵 播放圣诞歌";
       playing = false;
     }
   };
 
-  /* ending */
+  // ===== 5) 到点自动结束：雪停 + 文字淡出 + 显示已结束 =====
   const card = document.getElementById("card");
   const overlay = document.getElementById("overlay");
 
   function endShow(){
+    // 先停雪
     stopSnow();
-    try{ bgm.pause(); }catch(e){}
+
+    // 停音乐
+    try { bgm.pause(); } catch(e){}
+    playing = false;
+    musicBtn.textContent = "🎵 播放圣诞歌";
+
+    // 卡片淡出
     card.classList.add("ending");
-    setTimeout(()=>overlay.classList.add("show"),720);
+
+    // 稍后出现“已结束”
+    setTimeout(() => {
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden","false");
+    }, 720);
   }
 
+  // 如果已经过了今晚12点，直接结束态
   if(now >= endTime){
-    setTimeout(endShow,350);
-  }else{
-    setTimeout(endShow, endTime.getTime() - now.getTime());
+    // 让页面先渲染一下再转结束态，观感更丝滑
+    setTimeout(endShow, 350);
+  } else {
+    // 计算到今晚12点的剩余时间，到了自动触发
+    const ms = endTime.getTime() - now.getTime();
+    setTimeout(endShow, ms);
   }
 </script>
 </body>
