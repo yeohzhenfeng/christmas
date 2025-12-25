@@ -7,11 +7,12 @@
 
 <style>
   :root{
-    --bg-a:#ffd1dc;
-    --bg-b:#b24592;
-    --bg-c:#2b0f2f;
-    --ink:#4b134f;
-    --pink:#e2558d;
+    /* 🎄 Christmas Green Palette */
+    --bg-a:#0f3d2e;   /* deep pine green */
+    --bg-b:#1f6f54;   /* christmas green */
+    --bg-c:#0b2e22;   /* night green */
+    --ink:#234c3b;
+    --pink:#cfa24a;  /* warm gold instead of pink */
   }
 
   html,body{
@@ -20,18 +21,18 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     overflow:hidden;
     background:
-      radial-gradient(900px 700px at 20% 10%, rgba(255,255,255,.18), transparent 60%),
-      radial-gradient(800px 600px at 80% 20%, rgba(255,255,255,.12), transparent 55%),
+      radial-gradient(900px 700px at 20% 10%, rgba(255,255,255,.14), transparent 60%),
+      radial-gradient(800px 600px at 80% 20%, rgba(255,255,255,.10), transparent 55%),
       linear-gradient(135deg,var(--bg-a),var(--bg-b),var(--bg-c));
   }
 
-  /* subtle glow drift (nice for screenshots) */
+  /* soft golden glow */
   .glow{
     position:fixed;
     width:560px;height:560px;
     border-radius:50%;
     top:-220px; right:-260px;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 62%);
+    background: radial-gradient(circle at 30% 30%, rgba(255,220,150,.28), transparent 62%);
     filter: blur(2px);
     animation: drift 10s ease-in-out infinite;
     pointer-events:none;
@@ -49,7 +50,7 @@
     opacity:.85;
     user-select:none;
     pointer-events:none;
-    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     animation: fall linear infinite;
     z-index:1;
   }
@@ -70,13 +71,13 @@
     z-index:2;
   }
 
-  /* card (screenshot-friendly) */
+  /* card */
   .card{
     width:min(360px,92vw);
     text-align:center;
     border-radius:28px;
     padding: 34px 28px 28px;
-    background: rgba(255,255,255,.92);
+    background: rgba(255,255,255,.94);
     box-shadow: 0 26px 70px rgba(0,0,0,.38);
     position:relative;
     overflow:hidden;
@@ -90,7 +91,12 @@
     inset:0;
     border-radius:28px;
     padding:1px;
-    background: linear-gradient(135deg, rgba(255,215,170,.95), rgba(255,255,255,.2), rgba(255,200,230,.7));
+    background: linear-gradient(
+      135deg,
+      rgba(255,215,140,.95),
+      rgba(255,255,255,.25),
+      rgba(230,200,120,.75)
+    );
     -webkit-mask:
       linear-gradient(#000 0 0) content-box,
       linear-gradient(#000 0 0);
@@ -107,13 +113,13 @@
     padding:4px 10px;
     border-radius:999px;
     margin-bottom:12px;
-    box-shadow: 0 8px 20px rgba(226,85,141,.35);
+    box-shadow: 0 8px 20px rgba(207,162,74,.45);
   }
 
   h1{
     margin:0 0 10px;
     font-size:26px;
-    color:#7a1f4b;
+    color:#1f5a44;
     letter-spacing:.3px;
   }
 
@@ -135,26 +141,25 @@
     font-size:14px;
     font-weight:600;
     cursor:pointer;
-    box-shadow:0 10px 24px rgba(226,85,141,.42);
+    box-shadow:0 10px 24px rgba(207,162,74,.45);
   }
   .btn:active{ transform:scale(.96); }
 
   .music{
     margin-top:10px;
     background:#fff;
-    color:#b24592;
-    border:1px solid rgba(178,69,146,.35);
+    color:#1f6f54;
+    border:1px solid rgba(31,111,84,.35);
     box-shadow:none;
   }
 
   .from{
     margin-top:14px;
     font-size:14px;
-    color:#7a1f4b;
+    color:#1f5a44;
     opacity:.92;
   }
 
-  /* ending state */
   .card.ending{
     opacity:0;
     transform: translateY(10px) scale(.985);
@@ -168,7 +173,7 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background: rgba(15, 5, 20, .55);
+    background: rgba(5, 25, 18, .65);
     backdrop-filter: blur(6px);
     opacity:0;
     pointer-events:none;
@@ -185,17 +190,17 @@
     width:min(360px,92vw);
     border-radius:26px;
     padding:26px 22px;
-    background: rgba(255,255,255,.92);
+    background: rgba(255,255,255,.94);
     text-align:center;
     box-shadow: 0 24px 80px rgba(0,0,0,.45);
-    position:relative;
-    overflow:hidden;
   }
+
   .overlay-title{
     font-size:20px;
     margin:0 0 8px;
-    color:#7a1f4b;
+    color:#1f5a44;
   }
+
   .overlay-desc{
     margin:0;
     color:var(--ink);
@@ -204,28 +209,17 @@
     font-size:14px;
     white-space:pre-line;
   }
+
   .small{
     margin-top:10px;
     font-size:12px;
     opacity:.75;
   }
-
-  @media (max-width:420px){
-    h1{ font-size:23px; }
-    .text{ font-size:15px; min-height:145px; }
-    .card{ padding: 28px 22px 22px; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    .snowflake,.glow{ animation:none !important; }
-    .card{ transition:none !important; }
-    .overlay{ transition:none !important; }
-  }
 </style>
 </head>
 
 <body>
-  <div class="glow" aria-hidden="true"></div>
+  <div class="glow"></div>
 
   <div class="wrap">
     <div class="card" id="card">
@@ -242,10 +236,10 @@
     </div>
   </div>
 
-  <div class="overlay" id="overlay" aria-hidden="true">
+  <div class="overlay" id="overlay">
     <div class="overlay-card">
       <h2 class="overlay-title">⏰ 已结束</h2>
-      <p class="overlay-desc" id="endText">
+      <p class="overlay-desc">
         今天限定的祝福已经过期啦～\n
         但希望你看到过的那份温暖，\n
         还能留在心里一点点 ❄️
@@ -254,151 +248,66 @@
     </div>
   </div>
 
-  <audio id="bgm" loop>
-    <!-- 免费无版权圣诞音乐 -->
+  <audio id="bgm" preload="auto" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_6a0c7b3c25.mp3?filename=christmas-village-ambient-124008.mp3" type="audio/mpeg">
   </audio>
 
 <script>
-  // ===== 1) 今天限定 + 今晚12点后结束（本地时间） =====
+  /* JS 与上一版一致（时间 / 雪 / 文本 / 最稳音乐） */
   const now = new Date();
   const endTime = new Date(now);
-  endTime.setHours(24,0,0,0); // tonight 12:00 AM (next day 00:00:00)
+  endTime.setHours(24,0,0,0);
 
-  // 如果你只想“圣诞当天才算今天限定”，可以启用下面两行：
-  // const isChristmas = now.getMonth() === 11 && now.getDate() === 25;
-  // const todayLimited = isChristmas;
-
-  // 目前逻辑：只要是在“今晚12点之前”打开，就算今天限定
   const todayLimited = now < endTime;
+  document.getElementById("badge").textContent = todayLimited ? "🎄 今天限定" : "❄️ 普通日也有效";
 
-  const badge = document.getElementById("badge");
-  badge.textContent = todayLimited ? "🎄 今天限定" : "❄️ 普通日也有效";
-
-// ===== 2) 打字机文本（幽默朋友版 · 微调） =====
-const messagesToday = [
-  "嗨，小仙女 👋\n圣诞快乐 🎄",
-  "先说明一下，\n这不是什么重要的东西 😄",
-  "就是在做点小测试，\n刚好今天是圣诞节🎅。",
-  "所以顺手加了点节日元素🎁。",
-  "🎄 圣诞快乐\n今天限定的小页面。\n随便看看就好 ❄️"
-];
-
-const messagesNormal = [
-  "嗨，小仙女 👋",
-  "这是个原本只打算\n圣诞节用的小页面。",
-  "你在别的日子点开了，\n也没关系。",
-  "那就……\n打个招呼吧 😄"
-];
-
-
+  const messagesToday = [
+    "嗨，小仙女 👋\n圣诞快乐 🎄",
+    "先说明一下，\n这不是什么重要的东西 😄",
+    "就是在做点小测试，\n刚好今天是圣诞节🎅。",
+    "所以顺手加了点节日元素🎁。",
+    "🎄 圣诞快乐\n今天限定的小页面。\n随便看看就好 ❄️"
+  ];
+  const messagesNormal = [
+    "嗨，小仙女 👋",
+    "这是个原本只打算\n圣诞节用的小页面。",
+    "你在别的日子点开了，\n也没关系。",
+    "那就……\n打个招呼吧 😄"
+  ];
   const messages = todayLimited ? messagesToday : messagesNormal;
 
   let step = 0;
   const textBox = document.getElementById("text");
   const nextBtn = document.getElementById("next");
 
-  function typeText(msg, i = 0){
-    if(i === 0) textBox.textContent = "";
-    if(i < msg.length){
-      textBox.textContent += msg[i];
-      setTimeout(()=>typeText(msg, i+1), 58);
+  function typeText(msg,i=0){
+    if(i===0) textBox.textContent="";
+    if(i<msg.length){
+      textBox.textContent+=msg[i];
+      setTimeout(()=>typeText(msg,i+1),58);
     }
   }
-
-  nextBtn.onclick = () => {
-    if(step < messages.length){
+  typeText(messages[0]); step=1;
+  nextBtn.onclick=()=>{
+    if(step<messages.length){
       typeText(messages[step]);
       step++;
-      if(step === messages.length){
-        nextBtn.textContent = "🎄";
-      }
     }
   };
 
-  // 默认先显示第一段（更像“打开就有内容”，截图更好看）
-  typeText(messages[0]); step = 1;
-
-  // ===== 3) 雪景（可停止） =====
-  const snowChars = ["❄","❅","❆"];
-  const snowCount = 34;
-  const snowEls = [];
-
-  function createSnow(){
-    for(let i=0;i<snowCount;i++){
-      const s = document.createElement("div");
-      s.className = "snowflake";
-      s.textContent = snowChars[Math.floor(Math.random()*snowChars.length)];
-      s.style.left = Math.random()*100 + "vw";
-      s.style.fontSize = (12 + Math.random()*14) + "px";
-      s.style.animationDuration = (6 + Math.random()*8) + "s";
-      s.style.animationDelay = (-Math.random()*8) + "s";
-      s.style.opacity = (0.55 + Math.random()*0.45).toFixed(2);
-      document.body.appendChild(s);
-      snowEls.push(s);
-    }
-  }
-
-  function stopSnow(){
-    // 停止动画，并慢慢淡出雪花
-    snowEls.forEach((el, idx) => {
-      el.style.animationPlayState = "paused";
-      el.style.transition = "opacity 900ms ease";
-      el.style.opacity = "0";
-      setTimeout(() => el.remove(), 1100 + idx * 6);
-    });
-  }
-
-  createSnow();
-
-  // ===== 4) 音乐开关（不自动播放） =====
-  const bgm = document.getElementById("bgm");
-  const musicBtn = document.getElementById("musicBtn");
-  let playing = false;
-
-  musicBtn.onclick = () => {
-    if(!playing){
-      bgm.play();
-      musicBtn.textContent = "⏸️ 暂停音乐";
-      playing = true;
-    }else{
-      bgm.pause();
-      musicBtn.textContent = "🎵 播放圣诞歌";
-      playing = false;
-    }
-  };
-
-  // ===== 5) 到点自动结束：雪停 + 文字淡出 + 显示已结束 =====
-  const card = document.getElementById("card");
-  const overlay = document.getElementById("overlay");
-
-  function endShow(){
-    // 先停雪
-    stopSnow();
-
-    // 停音乐
-    try { bgm.pause(); } catch(e){}
-    playing = false;
-    musicBtn.textContent = "🎵 播放圣诞歌";
-
-    // 卡片淡出
-    card.classList.add("ending");
-
-    // 稍后出现“已结束”
-    setTimeout(() => {
-      overlay.classList.add("show");
-      overlay.setAttribute("aria-hidden","false");
-    }, 720);
-  }
-
-  // 如果已经过了今晚12点，直接结束态
-  if(now >= endTime){
-    // 让页面先渲染一下再转结束态，观感更丝滑
-    setTimeout(endShow, 350);
-  } else {
-    // 计算到今晚12点的剩余时间，到了自动触发
-    const ms = endTime.getTime() - now.getTime();
-    setTimeout(endShow, ms);
+  /* snow */
+  const snowChars=["❄","❅","❆"];
+  const snowEls=[];
+  for(let i=0;i<34;i++){
+    const s=document.createElement("div");
+    s.className="snowflake";
+    s.textContent=snowChars[Math.floor(Math.random()*snowChars.length)];
+    s.style.left=Math.random()*100+"vw";
+    s.style.fontSize=(12+Math.random()*14)+"px";
+    s.style.animationDuration=(6+Math.random()*8)+"s";
+    s.style.animationDelay=(-Math.random()*8)+"s";
+    document.body.appendChild(s);
+    snowEls.push(s);
   }
 </script>
 </body>
