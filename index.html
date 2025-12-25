@@ -1,59 +1,117 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>🎄 圣诞祝福</title>
+<title>🎄 Christmas Greeting</title>
 
 <style>
-  body{
+  :root{
+    --bg-a:#ffd1dc;
+    --bg-b:#b24592;
+    --bg-c:#2b0f2f;
+    --ink:#4b134f;
+    --pink:#e2558d;
+  }
+
+  html,body{
+    height:100%;
     margin:0;
-    height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    overflow:hidden;
+    background:
+      radial-gradient(900px 700px at 20% 10%, rgba(255,255,255,.18), transparent 60%),
+      radial-gradient(800px 600px at 80% 20%, rgba(255,255,255,.12), transparent 55%),
+      linear-gradient(135deg,var(--bg-a),var(--bg-b),var(--bg-c));
+  }
+
+  /* soft glow (nice for screenshots) */
+  .glow{
+    position:fixed;
+    width:560px;height:560px;
+    border-radius:50%;
+    top:-220px; right:-260px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 62%);
+    filter: blur(2px);
+    animation: drift 10s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes drift{
+    0%,100%{ transform: translate(0,0); }
+    50%{ transform: translate(-50px,40px); }
+  }
+
+  /* snow */
+  .snowflake{
+    position:fixed;
+    top:-10%;
+    color:#fff;
+    opacity:.85;
+    user-select:none;
+    pointer-events:none;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    animation: fall linear infinite;
+    z-index:1;
+  }
+  @keyframes fall{
+    from{ transform:translateY(-10vh); }
+    to{ transform:translateY(110vh); }
+  }
+
+  /* center */
+  .wrap{
+    height:100%;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    background: radial-gradient(circle at top, #ffd1dc, #b24592, #4b134f);
-    overflow:hidden;
-  }
-
-  body::before{
-    content:"";
-    position:absolute;
-    inset:-20%;
-    background: radial-gradient(circle, rgba(255,255,255,.18), transparent 60%);
-    animation: glow 10s ease-in-out infinite;
-  }
-  @keyframes glow{
-    0%,100%{ transform:scale(1); }
-    50%{ transform:scale(1.15); }
-  }
-
-  .heart{
-    position:absolute;
-    font-size:16px;
-    animation: fall linear infinite;
-    opacity:.7;
-  }
-  @keyframes fall{
-    from{ transform:translateY(-10vh); opacity:0; }
-    20%{ opacity:.8; }
-    to{ transform:translateY(110vh); opacity:0; }
-  }
-
-  .card{
+    padding:22px;
+    box-sizing:border-box;
     position:relative;
-    background: rgba(255,255,255,.88);
-    border-radius: 28px;
-    padding: 34px 28px;
-    width: 320px;
-    text-align:center;
-    box-shadow: 0 25px 60px rgba(0,0,0,.35);
     z-index:2;
   }
 
+  /* card */
+  .card{
+    width:min(360px,92vw);
+    text-align:center;
+    border-radius:28px;
+    padding: 34px 28px 28px;
+    background: rgba(255,255,255,.92);
+    box-shadow: 0 26px 70px rgba(0,0,0,.38);
+    position:relative;
+    overflow:hidden;
+    transition: opacity 900ms ease, transform 900ms ease, filter 900ms ease;
+  }
+
+  /* gold rim */
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:28px;
+    padding:1px;
+    background: linear-gradient(135deg, rgba(255,215,170,.95), rgba(255,255,255,.2), rgba(255,200,230,.7));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events:none;
+  }
+
+  .badge{
+    display:inline-block;
+    font-size:12px;
+    color:#fff;
+    background: var(--pink);
+    padding:4px 10px;
+    border-radius:999px;
+    margin-bottom:12px;
+    box-shadow: 0 8px 20px rgba(226,85,141,.35);
+  }
+
   h1{
-    margin:0 0 14px;
+    margin:0 0 10px;
     font-size:26px;
     color:#7a1f4b;
   }
@@ -61,8 +119,8 @@
   .text{
     font-size:16px;
     line-height:1.75;
-    color:#4b134f;
-    min-height:140px;
+    color: var(--ink);
+    min-height:150px;
     white-space:pre-line;
   }
 
@@ -71,11 +129,12 @@
     padding:10px 18px;
     border-radius:999px;
     border:none;
-    background:#e2558d;
+    background: var(--pink);
     color:#fff;
     font-size:14px;
+    font-weight:600;
     cursor:pointer;
-    box-shadow:0 6px 18px rgba(226,85,141,.5);
+    box-shadow:0 10px 24px rgba(226,85,141,.42);
   }
   .btn:active{ transform:scale(.96); }
 
@@ -83,83 +142,182 @@
     margin-top:10px;
     background:#fff;
     color:#b24592;
-    border:1px solid #f0c;
+    border:1px solid rgba(178,69,146,.35);
+    box-shadow:none;
   }
 
   .from{
     margin-top:14px;
     font-size:14px;
     color:#7a1f4b;
+    opacity:.92;
+  }
+
+  /* ending */
+  .card.ending{
+    opacity:0;
+    transform: translateY(10px) scale(.985);
+    filter: blur(1px);
+  }
+
+  /* overlay */
+  .overlay{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: rgba(15, 5, 20, .55);
+    backdrop-filter: blur(6px);
+    opacity:0;
+    pointer-events:none;
+    transition: opacity 900ms ease;
+    z-index:5;
+    padding:22px;
+    box-sizing:border-box;
+  }
+  .overlay.show{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .overlay-card{
+    width:min(360px,92vw);
+    border-radius:26px;
+    padding:26px 22px;
+    background: rgba(255,255,255,.92);
+    text-align:center;
+    box-shadow: 0 24px 80px rgba(0,0,0,.45);
+  }
+  .overlay-title{
+    font-size:20px;
+    margin:0 0 8px;
+    color:#7a1f4b;
+  }
+  .overlay-desc{
+    margin:0;
+    color:var(--ink);
     opacity:.9;
+    line-height:1.6;
+    font-size:14px;
+    white-space:pre-line;
+  }
+  .small{
+    margin-top:10px;
+    font-size:12px;
+    opacity:.75;
   }
 </style>
 </head>
 
 <body>
+  <div class="glow"></div>
 
-<div class="card">
-  <h1>🎄 给小仙女</h1>
-  <div class="text" id="text"></div>
+  <div class="wrap">
+    <div class="card" id="card">
+      <div class="badge" id="badge">🎄 Today Only</div>
+      <h1>For Little Fairy</h1>
 
-  <button class="btn" id="next">继续看 ✨</button>
-  <br />
-  <button class="btn music" id="musicBtn">🎵 播放圣诞歌</button>
+      <div class="text" id="text"></div>
 
-  <div class="from">—— Yibo</div>
-</div>
+      <button class="btn" id="next">Continue ❄️</button>
+      <br />
+      <button class="btn music" id="musicBtn">🎵 Play Christmas Music</button>
 
-<audio id="bgm" loop>
-  <!-- 免费可用的圣诞音乐（无版权问题） -->
-  <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_6a0c7b3c25.mp3?filename=christmas-village-ambient-124008.mp3" type="audio/mpeg">
-</audio>
+      <div class="from">— ZF</div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="overlay-card">
+      <h2 class="overlay-title">⏰ Ended</h2>
+      <p class="overlay-desc">
+        This today-only message has ended.\n
+        But I hope the warmth you saw here\n
+        stays with you a little longer ❄️
+      </p>
+      <div class="small">(You can take a screenshot to keep it)</div>
+    </div>
+  </div>
+
+  <audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_6a0c7b3c25.mp3?filename=christmas-village-ambient-124008.mp3" type="audio/mpeg">
+  </audio>
 
 <script>
-  /* text typing */
-  const messages = [
-    "小仙女，\n圣诞快乐 🎄",
-    "这个冬天，\n希望你过得轻松一点。",
-    "不一定每天都很开心，\n但至少有被温柔对待。",
-    "愿你的生活里，\n有热可可、有笑容，\n也有属于你的安静时刻。",
-    "🎄 Merry Christmas\n希望这个节日，\n能给你带来一点点温暖 ✨"
+  /* time control */
+  const now = new Date();
+  const endTime = new Date(now);
+  endTime.setHours(24,0,0,0);
+
+  const todayLimited = now < endTime;
+  document.getElementById("badge").textContent = todayLimited ? "🎄 Today Only" : "❄️ Archived";
+
+  /* messages */
+  const messagesToday = [
+    "Little Fairy,\nMerry Christmas 🎄",
+    "Since today is Christmas,\nI wanted to wish you something special.",
+    "You don't have to feel extra happy.\nJust don't be too hard on yourself.",
+    "May you see snow when you look up,\nand feel warmth when you look down.",
+    "🎄 Merry Christmas\nThis message belongs\nonly to today ❄️"
   ];
+
+  const messagesNormal = [
+    "Little Fairy,\nHello ✨",
+    "If you opened this on another day,\nthat’s okay too.",
+    "I hope you’re feeling calm\nwhen you read this.",
+    "May you be treated gently\nthis winter ❄️"
+  ];
+
+  const messages = todayLimited ? messagesToday : messagesNormal;
 
   let step = 0;
   const textBox = document.getElementById("text");
-  const btn = document.getElementById("next");
+  const nextBtn = document.getElementById("next");
 
   function typeText(msg, i = 0){
     if(i === 0) textBox.textContent = "";
     if(i < msg.length){
       textBox.textContent += msg[i];
-      setTimeout(()=>typeText(msg, i+1), 60);
+      setTimeout(()=>typeText(msg, i+1), 58);
     }
   }
 
-  btn.onclick = () => {
+  typeText(messages[0]); step = 1;
+
+  nextBtn.onclick = () => {
     if(step < messages.length){
       typeText(messages[step]);
       step++;
-      if(step === messages.length){
-        btn.textContent = "🎄";
-      }
     }
   };
 
-  /* hearts */
-  const hearts = ["❤️","💖","💕","💗"];
-  function createHeart(){
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
-    h.style.left = Math.random()*100 + "vw";
-    h.style.animationDuration = (6 + Math.random()*6) + "s";
-    h.style.fontSize = (14 + Math.random()*18) + "px";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),12000);
-  }
-  setInterval(createHeart, 900);
+  /* snow */
+  const snowChars = ["❄","❅","❆"];
+  const snowCount = 34;
+  const snowEls = [];
 
-  /* music control */
+  for(let i=0;i<snowCount;i++){
+    const s = document.createElement("div");
+    s.className = "snowflake";
+    s.textContent = snowChars[Math.floor(Math.random()*snowChars.length)];
+    s.style.left = Math.random()*100 + "vw";
+    s.style.fontSize = (12 + Math.random()*14) + "px";
+    s.style.animationDuration = (6 + Math.random()*8) + "s";
+    s.style.animationDelay = (-Math.random()*8) + "s";
+    document.body.appendChild(s);
+    snowEls.push(s);
+  }
+
+  function stopSnow(){
+    snowEls.forEach((el, i) => {
+      el.style.animationPlayState = "paused";
+      el.style.transition = "opacity 900ms ease";
+      el.style.opacity = "0";
+      setTimeout(()=>el.remove(), 1100 + i*6);
+    });
+  }
+
+  /* music */
   const bgm = document.getElementById("bgm");
   const musicBtn = document.getElementById("musicBtn");
   let playing = false;
@@ -167,15 +325,31 @@
   musicBtn.onclick = () => {
     if(!playing){
       bgm.play();
-      musicBtn.textContent = "⏸️ 暂停音乐";
+      musicBtn.textContent = "⏸ Pause Music";
       playing = true;
     }else{
       bgm.pause();
-      musicBtn.textContent = "🎵 播放圣诞歌";
+      musicBtn.textContent = "🎵 Play Christmas Music";
       playing = false;
     }
   };
-</script>
 
+  /* ending */
+  const card = document.getElementById("card");
+  const overlay = document.getElementById("overlay");
+
+  function endShow(){
+    stopSnow();
+    try{ bgm.pause(); }catch(e){}
+    card.classList.add("ending");
+    setTimeout(()=>overlay.classList.add("show"),720);
+  }
+
+  if(now >= endTime){
+    setTimeout(endShow,350);
+  }else{
+    setTimeout(endShow, endTime.getTime() - now.getTime());
+  }
+</script>
 </body>
 </html>
